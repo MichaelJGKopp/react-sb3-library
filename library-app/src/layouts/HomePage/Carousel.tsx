@@ -4,6 +4,7 @@ import { ReturnBook } from "./ReturnBook";
 
 export const Carousel = () => {
   const book1: Book = new Book("", "Luv2Code", bookImage);
+  
   const books: Book[] = [];
   for (let i = 0; i < 9; i++) {
     books.push(book1);
