@@ -1,10 +1,7 @@
 // import { useState } from 'react'
-import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
-import { ExploreTopBooks } from "./layouts/HomePage/ExploreTopBooks";
-import { Carousel } from "./layouts/HomePage/Carousel"
-import { Heros } from "./layouts/HomePage/Heros";
-import { LibraryServices } from "./layouts/HomePage/LibraryServices";
+import { HomePage } from "./layouts/HomePage/HomePage";
 import { Footer } from "./layouts/NavbarAndFooter/Footer";
+import { Navbar } from "./layouts/NavbarAndFooter/Navbar";
 
 export const App = () => {
   // const [count, setCount] = useState(0)
@@ -12,11 +9,8 @@ export const App = () => {
   return (
     <>
       <Navbar />
-      <ExploreTopBooks />
-      <Carousel />
-      <Heros />
-      <LibraryServices />
+      <HomePage />
       <Footer />
     </>
   );
-}
+};
