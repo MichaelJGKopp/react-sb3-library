@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="book")
-@Data
+@Data // Lombok issues solved for now, specify version, annotation processor, intellij (getters don't compile)
 @NoArgsConstructor
 public class Book {
 
