@@ -1,11 +1,11 @@
-import { Book } from "../../../model/Book";
+import BookModel from "../../../models/BookModel";
 import bookImage from "./../../../Images/BooksImages/book-luv2code-1000.png";
 import { ReturnBook } from "./ReturnBook";
 
 export const Carousel = () => {
-  const book1: Book = new Book("", "Luv2Code", bookImage);
+  const book1: BookModel = new BookModel("", "Luv2Code", bookImage);
   
-  const books: Book[] = [];
+  const books: BookModel[] = [];
   for (let i = 0; i < 9; i++) {
     books.push(book1);
   }
