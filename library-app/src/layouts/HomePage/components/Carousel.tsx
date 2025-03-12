@@ -1,4 +1,5 @@
 import { BookModel } from "../../../models/BookModel";
+import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { ReturnBook } from "./ReturnBook";
 import { useEffect, useState } from "react"; // react hooks
 
@@ -42,7 +43,7 @@ export const Carousel = () => {
       setBooks(loadedBooks);
       setIsLoading(false);
     };
-    fetchBooks().catch((error: any) => {
+    fetchBooks().catch((error) => {
       setIsLoading(false);
       setHttpError(error.message);
     });
@@ -50,9 +51,7 @@ export const Carousel = () => {
 
   if (isLoading) {
     return (
-      <div className="container m-5">
-        <p>Loading...</p>
-      </div>
+      <SpinnerLoading />
     );
   }
 
