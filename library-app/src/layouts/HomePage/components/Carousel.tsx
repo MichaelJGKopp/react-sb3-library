@@ -1,5 +1,4 @@
 import { BookModel } from "../../../models/BookModel";
-import bookImage from "./../../../Images/BooksImages/book-luv2code-1000.png";
 import { ReturnBook } from "./ReturnBook";
 import { useEffect, useState } from "react"; // react hooks
 
@@ -36,7 +35,7 @@ export const Carousel = () => {
           _copies: responseData[key].copies,
           _copiesAvailable: responseData[key].copiesAvailable,
           _category: responseData[key].category,
-          _img: responseData[key].image,
+          _img: responseData[key].img,
         });
       }
 
@@ -65,17 +64,6 @@ export const Carousel = () => {
     )
   }
 
-  const book1: BookModel = new BookModel(
-    1,
-    "Luv2Code",
-    "",
-    "",
-    0,
-    0,
-    "",
-    bookImage
-  );
-
   return (
     <div className="container mt-5" style={{ height: 550 }}>
       <div className="homepage-carousel-title">
@@ -91,23 +79,23 @@ export const Carousel = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
+              {books.slice(0, 3).map(book => (
+                <ReturnBook book={book} key={book._id} />
+              ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
+            {books.slice(3, 6).map(book => (
+                <ReturnBook book={book} key={book._id} />
+              ))}
             </div>
           </div>
           <div className="carousel-item">
             <div className="row d-flex justify-content-center align-items-center">
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
-              <ReturnBook book={book1} />
+            {books.slice(6, 9).map(book => (
+                <ReturnBook book={book} key={book._id} />
+              ))}
             </div>
           </div>
         </div>
@@ -140,7 +128,7 @@ export const Carousel = () => {
       {/* Mobile */}
       <div className="d-lg-none mt-3">
         <div className="row d-flex justify-content-center align-items-center">
-          <ReturnBook book={book1} />
+          <ReturnBook book={books[0]} key={books[0]._id}/>
         </div>
       </div>
       <div className="homepage-carousel-title mt-3">

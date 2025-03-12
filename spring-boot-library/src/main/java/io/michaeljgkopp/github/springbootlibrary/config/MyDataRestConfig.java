@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
-    // React frontend running on port 3000 is allowed to access the API on all endpoints
-    private String allowedOrigins = "http://localhost:3000";
+    // React frontend running on port 5173 (vite default) is allowed to access the API on all endpoints
+    private String allowedOrigins = "http://127.0.0.1:5173";
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config,
