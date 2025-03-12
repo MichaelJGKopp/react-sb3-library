@@ -1,19 +1,85 @@
-import BookModel from "../../../models/BookModel";
+import { BookModel } from "../../../models/BookModel";
 import bookImage from "./../../../Images/BooksImages/book-luv2code-1000.png";
 import { ReturnBook } from "./ReturnBook";
+import { useEffect, useState } from "react"; // react hooks
 
 export const Carousel = () => {
-  const book1: BookModel = new BookModel("", "Luv2Code", bookImage);
-  
-  const books: BookModel[] = [];
-  for (let i = 0; i < 9; i++) {
-    books.push(book1);
+  const [books, setBooks] = useState<BookModel[]>([]); // state to hold the books
+  const [isLoading, setIsLoading] = useState(true); // state to hold the loading status
+  const [httpError, setHttpError] = useState(null); // state to hold the error status
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      // triggers each time the array e.g. [] here changes and once once when carousel is created
+      const baseUrl: string = "http://localhost:8080/api/books";
+
+      const url: string = `${baseUrl}?size=9&page=0`;
+
+      const response = await fetch(url); // fetch the data from the url
+
+      if (!response.ok) {
+        throw new Error("Something went wrong fetching the books!");
+      }
+
+      const responseJson = await response.json(); // convert to json, await because stil async
+
+      const responseData = responseJson._embedded.books;
+
+      const loadedBooks: BookModel[] = [];
+
+      for (const key in responseData) {
+        loadedBooks.push({
+          _id: responseData[key].id,
+          _title: responseData[key].title,
+          _author: responseData[key].author,
+          _description: responseData[key].description,
+          _copies: responseData[key].copies,
+          _copiesAvailable: responseData[key].copiesAvailable,
+          _category: responseData[key].category,
+          _img: responseData[key].image,
+        });
+      }
+
+      setBooks(loadedBooks);
+      setIsLoading(false);
+    };
+    fetchBooks().catch((error: any) => {
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="container m-5">
+        <p>Loading...</p>
+      </div>
+    );
   }
+
+  if (httpError) {
+    return (
+      <div className="container m-5">
+        <p>{httpError}</p>
+      </div>
+    )
+  }
+
+  const book1: BookModel = new BookModel(
+    1,
+    "Luv2Code",
+    "",
+    "",
+    0,
+    0,
+    "",
+    bookImage
+  );
 
   return (
     <div className="container mt-5" style={{ height: 550 }}>
       <div className="homepage-carousel-title">
-        <h3>Find your next "I stayed up too late reading" book.</h3>
+        <h3>Find your next book by browsing our selection of favorites.</h3>
       </div>
       <div
         id="carouselExampleControls"
@@ -25,7 +91,6 @@ export const Carousel = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <div className="row d-flex justify-content-center align-items-center">
-
               <ReturnBook book={book1} />
               <ReturnBook book={book1} />
               <ReturnBook book={book1} />
