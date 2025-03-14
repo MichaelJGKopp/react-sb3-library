@@ -1,9 +1,23 @@
-import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import React, { useState } from "react";
 import { useBookFetch } from "../../hooks/useBookFetch";
+import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchBook } from "./components/SearchBook";
+import { Pagination } from "../Utils/Pagination";
 
 export const SearchBooksPage = () => {
-  const { books, isLoading, httpError } = useBookFetch(5, 0);
+  const [page, setPage] = useState<number>(1);
+  const [itemsPerPage, setPageItems] = useState<number>(5); // Number of items per page to be set by user
+  const [totalPages, setPageMax] = useState<number>(1);
+
+  const { books, isLoading, httpError, totalElements } = useBookFetch(
+    itemsPerPage,
+    page - 1
+  );
+
+  // State updates should be in useEffect or event handlers, not directly in the component body
+  React.useEffect(() => {
+    setPageMax(Math.ceil(totalElements / itemsPerPage));
+  }, [books, itemsPerPage, totalElements]);
 
   if (isLoading) {
     return <SpinnerLoading />;
@@ -54,37 +68,50 @@ export const SearchBooksPage = () => {
                     </a>
                   </li>
                   <li>
-                  <a className="dropdown-item" href="#">
-                    Front End
-                  </a>
+                    <a className="dropdown-item" href="#">
+                      Front End
+                    </a>
                   </li>
                   <li>
-                  <a className="dropdown-item" href="#">
-                    Back End
-                  </a>
+                    <a className="dropdown-item" href="#">
+                      Back End
+                    </a>
                   </li>
                   <li>
-                  <a className="dropdown-item" href="#">
-                    Data
-                  </a>
+                    <a className="dropdown-item" href="#">
+                      Data
+                    </a>
                   </li>
                   <li>
-                  <a className="dropdown-item" href="#">
-                    DevOps
-                  </a>
+                    <a className="dropdown-item" href="#">
+                      DevOps
+                    </a>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
           <div className="mt-5">
-            <h5>Number of results: (22)</h5>
+            <h5>Number of results: ({totalElements})</h5>
           </div>
-          <p>1 to 5 of 22 items:</p>
+          <p>
+            {1 + (page - 1) * itemsPerPage} to{" "}
+            {books.length + (page - 1) * itemsPerPage} of {totalElements} items:
+          </p>
           {books.map((book) => (
             <SearchBook book={book} key={book._id} />
           ))}
         </div>
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            paginate={setPage}
+            showItemsPerPage={true}
+            itemsPerPage={itemsPerPage}
+            setItemsPerPage={setPageItems}
+          />
+        )}
       </div>
     </div>
   );

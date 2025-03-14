@@ -51,13 +51,16 @@ export const useBookFetch = (
 
         setBooks(loadedBooks);
         setIsLoading(false);
-      } catch (error: any) {
+      } catch (error: unknown) {
         setIsLoading(false);
-        setHttpError(error.message);
+        setHttpError(
+          error instanceof Error ? error.message : "Unknown error occurred"
+        );
       }
     };
 
     fetchBooks();
+    window.scrollTo(0, 0);
   }, [size, page, searchUrl]);
 
   return { books, isLoading, httpError, totalElements };
