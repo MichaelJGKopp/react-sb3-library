@@ -37,7 +37,10 @@ export const SearchBooksPage = () => {
 
   // Calculate pagination display information here
   const indexFirstItem = 1 + (page - 1) * itemsPerPage;
-  const indexLastItem = Math.min(books.length + (page - 1) * itemsPerPage, totalElements);
+  const indexLastItem = Math.min(
+    books.length + (page - 1) * itemsPerPage,
+    totalElements
+  );
 
   return (
     <div>
@@ -54,20 +57,27 @@ export const SearchBooksPage = () => {
           <div className="mt-5">
             <h5>Number of results: ({totalElements})</h5>
           </div>
-          <p>
-            {totalElements ? (
-              <span>
-                {indexFirstItem} to{" "}
-                {indexLastItem} of {totalElements}{" "}
-                items
-              </span>
-            ) : (
-              "No results found"
-            )}
-          </p>
-          {books.map((book) => (
-            <SearchBook book={book} key={book._id} />
-          ))}
+          {totalElements ? (
+            <>
+              <p>
+                {indexFirstItem} to {indexLastItem} of {totalElements} items
+              </p>
+              {books.map((book) => (
+                <SearchBook book={book} key={book._id} />
+              ))}
+            </>
+          ) : (
+            <div className="my-4">
+              <h3>Can't find what you are looking for?</h3>
+              <a
+                type="button"
+                className="btn main-color btn-md mt-2 px-4 ms-md-5 fw-bold text-white"
+                href="#"
+              >
+                Library Services
+              </a>
+            </div>
+          )}
         </div>
         {totalPages > 1 && (
           <Pagination
