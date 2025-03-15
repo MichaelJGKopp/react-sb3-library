@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { BookModel } from "../models/BookModel";
 
 export const useBookFetch = (
-  size: number = 9,
-  page: number = 0,
+  itemsPerPage: number = 9,
+  currentPage: number = 0,
   searchUrl?: string
 ) => {
   const [books, setBooks] = useState<BookModel[]>([]);
@@ -17,7 +17,9 @@ export const useBookFetch = (
         const baseUrl: string = "http://localhost:8080/api/books";
 
         // Use searchUrl if provided, otherwise create standard URL
-        const url: string = searchUrl || `${baseUrl}?size=${size}&page=${page}`;
+        const url: string = searchUrl
+          ? `${baseUrl}${searchUrl}&size=${itemsPerPage}&page=${currentPage}`
+          : `${baseUrl}?size=${itemsPerPage}&page=${currentPage}`;
 
         const response = await fetch(url);
 
@@ -61,7 +63,7 @@ export const useBookFetch = (
 
     fetchBooks();
     window.scrollTo(0, 0);
-  }, [size, page, searchUrl]);
+  }, [itemsPerPage, currentPage, searchUrl]);
 
   return { books, isLoading, httpError, totalElements };
 };

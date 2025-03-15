@@ -5,19 +5,39 @@ import { SearchBook } from "./components/SearchBook";
 import { Pagination } from "../Utils/Pagination";
 
 export const SearchBooksPage = () => {
-  const [page, setPage] = useState<number>(1);
-  const [itemsPerPage, setPageItems] = useState<number>(5); // Number of items per page to be set by user
-  const [totalPages, setPageMax] = useState<number>(1);
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setPageItems] = useState(5); // Number of items per page to be set by user
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchUrl, setSearchUrl] = useState("");
+  const [search, setSearch] = useState("");
 
   const { books, isLoading, httpError, totalElements } = useBookFetch(
     itemsPerPage,
-    page - 1
+    page - 1,
+    searchUrl
   );
 
-  // State updates should be in useEffect or event handlers, not directly in the component body
+  // State update for the total pages
   React.useEffect(() => {
-    setPageMax(Math.ceil(totalElements / itemsPerPage));
+    setTotalPages(Math.ceil(totalElements / itemsPerPage));
   }, [books, itemsPerPage, totalElements]);
+
+  // Function to handle search button click
+  const handleSearch = () => {
+    if (search.trim()) {
+      setSearchUrl(`/search/findByTitleContaining?title=${search.trim()}`);
+      setPage(1); // Reset to first page when searching
+    } else {
+      setSearchUrl(""); // Clear search URL if input is empty
+    }
+  };
+
+  // Handle Enter key press in search input
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   if (isLoading) {
     return <SpinnerLoading />;
@@ -43,8 +63,16 @@ export const SearchBooksPage = () => {
                   type="search"
                   placeholder="Search"
                   aria-labelledby="Search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={handleKeyPress}
                 />
-                <button className="btn btn-outline-success">Search</button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={handleSearch}
+                >
+                  Search
+                </button>
               </div>
             </div>
             <div className="col-4">
