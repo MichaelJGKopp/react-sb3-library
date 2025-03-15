@@ -3,7 +3,7 @@ import { useBookFetch } from "../../hooks/useBookFetch";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchBook } from "./components/SearchBook";
 import { Pagination } from "../Utils/Pagination";
-import { Dropdown } from "./components/Dropdown";
+import { CategorySelection } from "./components/CategorySelection";
 import { SearchCtrl } from "./components/SearchCtrl";
 
 export const SearchBooksPage = () => {
@@ -11,7 +11,9 @@ export const SearchBooksPage = () => {
   const [itemsPerPage, setPageItems] = useState(5); // Number of items per page to be set by user
   const [totalPages, setTotalPages] = useState(1);
   const [searchUrl, setSearchUrl] = useState("");
+  const [categorySelection, setCategorySelection] = useState("Book Category");
 
+  // Fetching books using custom hook
   const { books, isLoading, httpError, totalElements } = useBookFetch(
     itemsPerPage,
     page - 1,
@@ -48,10 +50,19 @@ export const SearchBooksPage = () => {
         <div>
           <div className="row mt-5">
             <div className="col-6">
-              <SearchCtrl setSearchUrl={setSearchUrl} setPage={setPage} />
+              <SearchCtrl
+                setSearchUrl={setSearchUrl}
+                setPage={setPage}
+                setCategorySelection={setCategorySelection}
+              />
             </div>
             <div className="col-4">
-              <Dropdown />
+              <CategorySelection
+                categorySelection={categorySelection}
+                setCategorySelection={setCategorySelection}
+                setSearchUrl={setSearchUrl}
+                setPage={setPage}
+              />
             </div>
           </div>
           <div className="mt-5">

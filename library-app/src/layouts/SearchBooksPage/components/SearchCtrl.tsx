@@ -3,11 +3,13 @@ import React, { useState } from "react";
 type SearchCtrlProps = {
   setSearchUrl: (searchUrl: string) => void;
   setPage: (page: number) => void;
+  setCategorySelection: (categorySelection: string) => void;
 };
 
 export const SearchCtrl = ({
   setSearchUrl,
   setPage,
+  setCategorySelection
 }: SearchCtrlProps) => {
   const [search, setSearch] = useState("");
 
@@ -19,6 +21,7 @@ export const SearchCtrl = ({
     } else {
       setSearchUrl(""); // Clear search URL if input is empty
     }
+    setCategorySelection("Book Category"); // Reset category selection
   };
 
   // Handle Enter key press in search input
