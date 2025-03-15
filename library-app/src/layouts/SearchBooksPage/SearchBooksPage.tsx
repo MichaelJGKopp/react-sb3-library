@@ -35,6 +35,10 @@ export const SearchBooksPage = () => {
     );
   }
 
+  // Calculate pagination display information here
+  const indexFirstItem = 1 + (page - 1) * itemsPerPage;
+  const indexLastItem = Math.min(books.length + (page - 1) * itemsPerPage, totalElements);
+
   return (
     <div>
       <div className="container">
@@ -53,8 +57,8 @@ export const SearchBooksPage = () => {
           <p>
             {totalElements ? (
               <span>
-                {1 + (page - 1) * itemsPerPage} to{" "}
-                {books.length + (page - 1) * itemsPerPage} of {totalElements}{" "}
+                {indexFirstItem} to{" "}
+                {indexLastItem} of {totalElements}{" "}
                 items
               </span>
             ) : (
