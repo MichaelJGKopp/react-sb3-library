@@ -1,6 +1,7 @@
 package io.michaeljgkopp.github.springbootlibrary.config;
 
 import io.michaeljgkopp.github.springbootlibrary.entity.Book;
+import io.michaeljgkopp.github.springbootlibrary.entity.Review;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -27,9 +28,11 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         // By default, Spring Data REST doesn't expose entity IDs in responses.
         // This line ensures Book IDs are included in REST responses.
         config.exposeIdsFor(Book.class);
+        config.exposeIdsFor(Review.class);
 
         // Calls the helper method to disable the specified HTTP methods for Book entity.
         disableHttpMethods(Book.class, config, unsupportedActions);
+        disableHttpMethods(Review.class, config, unsupportedActions);
 
         /* Configure CORS Mapping */
         // Configures CORS to allow requests from the specified origin to all REST endpoints.

@@ -1,5 +1,7 @@
 import { useBookFetch } from "../../hooks/useBookFetch";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { StarsReview } from "../Utils/StarsReview";
+import { CheckoutAndReview } from "./CheckoutAndReview";
 
 export const BookCheckoutPage = () => {
   const bookId = window.location.pathname.split("/")[2];
@@ -45,8 +47,10 @@ export const BookCheckoutPage = () => {
               <h2>{book?._title}</h2>
               <h5 className="text-primary">{book?._author}</h5>
               <p className="lead">{book?._description}</p>
+              <StarsReview rating={2.5} size={32} />
             </div>
           </div>
+            <CheckoutAndReview book={book} mobile={false} />
         </div>
         <hr />
       </div>
@@ -72,12 +76,15 @@ export const BookCheckoutPage = () => {
           )}
         </div>
         <div className="mt-4">
-            <div className="ms-2">
-                <h2>{book?._title}</h2>
-                <h5 className="text-primary">{book?._author}</h5>
-                <p className="lead">{book?._description}</p>
-            </div>
+          <div className="ms-2">
+            <h2>{book?._title}</h2>
+            <h5 className="text-primary">{book?._author}</h5>
+            <p className="lead">{book?._description}</p>
+            <StarsReview rating={2.5} size={32} />
+          </div>
         </div>
+        <CheckoutAndReview book={book} mobile={true} />
+        <hr />
       </div>
     </div>
   );
