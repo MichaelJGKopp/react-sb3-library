@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useBookFetch } from "../../hooks/useBookFetch";
+import { useBooksFetch } from "../../hooks/useBooksFetch";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchBook } from "./components/SearchBook";
 import { Pagination } from "../Utils/Pagination";
@@ -14,7 +14,7 @@ export const SearchBooksPage = () => {
   const [categorySelection, setCategorySelection] = useState("Book Category");
 
   // Fetching books using custom hook
-  const { books, isLoading, httpError, totalElements } = useBookFetch(
+  const { books, isLoading, httpError, totalElements } = useBooksFetch(
     itemsPerPage,
     page - 1,
     searchUrl

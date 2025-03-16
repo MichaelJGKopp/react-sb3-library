@@ -1,57 +1,43 @@
 import { useState, useEffect } from "react";
 import { BookModel } from "../models/BookModel";
 
-export const useBookFetch = (
-  itemsPerPage: number = 9,
-  currentPage: number = 0,
-  searchUrl?: string
-) => {
-  const [books, setBooks] = useState<BookModel[]>([]);
+export const useBookFetch = (bookId: string = "1", searchUrl?: string) => {
+  const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState<string | null>(null);
-  const [totalElements, setTotalElements] = useState(0);
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchBook = async () => {
       try {
         const baseUrl: string = "http://localhost:8080/api/books";
 
         // Use searchUrl if provided, otherwise create standard URL
         const url: string = searchUrl
-          ? `${baseUrl}${searchUrl}&size=${itemsPerPage}&page=${currentPage}`
-          : `${baseUrl}?size=${itemsPerPage}&page=${currentPage}`;
+          ? `${baseUrl}${searchUrl}`
+          : `${baseUrl}/${bookId}`;
+
+          console.log("url: ", url);
 
         const response = await fetch(url);
 
         if (!response.ok) {
-          throw new Error("Something went wrong fetching the books!");
+          throw new Error("Something went wrong fetching the book!");
         }
 
         const responseJson = await response.json();
 
-        // Set total elements if available in response
-        if (responseJson.page) {
-          setTotalElements(responseJson.page.totalElements);
-        }
+        const loadedBook: BookModel = {
+          _id: responseJson.id,
+          _title: responseJson.title,
+          _author: responseJson.author,
+          _description: responseJson.description,
+          _copies: responseJson.copies,
+          _copiesAvailable: responseJson.copiesAvailable,
+          _category: responseJson.category,
+          _img: responseJson.img,
+        };
 
-        const responseData = responseJson._embedded.books;
-
-        const loadedBooks: BookModel[] = [];
-
-        for (const key in responseData) {
-          loadedBooks.push({
-            _id: responseData[key].id,
-            _title: responseData[key].title,
-            _author: responseData[key].author,
-            _description: responseData[key].description,
-            _copies: responseData[key].copies,
-            _copiesAvailable: responseData[key].copiesAvailable,
-            _category: responseData[key].category,
-            _img: responseData[key].img,
-          });
-        }
-
-        setBooks(loadedBooks);
+        setBook(loadedBook);
         setIsLoading(false);
       } catch (error: unknown) {
         setIsLoading(false);
@@ -61,9 +47,9 @@ export const useBookFetch = (
       }
     };
 
-    fetchBooks();
+    fetchBook();
     window.scrollTo(0, 0);
-  }, [itemsPerPage, currentPage, searchUrl]);
+  }, [bookId, searchUrl]);
 
-  return { books, isLoading, httpError, totalElements };
+  return { book, isLoading, httpError };
 };

@@ -1,10 +1,10 @@
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { ReturnBook } from "./ReturnBook";
-import { useBookFetch } from "../../../hooks/useBookFetch"; // custom hook to fetch books
+import { useBooksFetch } from "../../../hooks/useBooksFetch"; // custom hook to fetch books
 import { Link } from "react-router-dom";
 
 export const Carousel = () => {
-  const { books, isLoading, httpError } = useBookFetch(9, 0);
+  const { books, isLoading, httpError } = useBooksFetch(9, 0);
 
   if (isLoading) {
     return (
