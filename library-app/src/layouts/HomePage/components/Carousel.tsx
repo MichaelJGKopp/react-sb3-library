@@ -1,6 +1,7 @@
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
 import { ReturnBook } from "./ReturnBook";
 import { useBookFetch } from "../../../hooks/useBookFetch"; // custom hook to fetch books
+import { Link } from "react-router-dom";
 
 export const Carousel = () => {
   const { books, isLoading, httpError } = useBookFetch(9, 0);
@@ -87,9 +88,9 @@ export const Carousel = () => {
         </div>
       </div>
       <div className="homepage-carousel-title mt-3">
-        <a className="btn btn-outline-secondary btn-lg" href="#">
+        <Link className="btn btn-outline-secondary btn-lg" to="/search">
           View More
-        </a>
+        </Link>
       </div>
     </div>
   );
