@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BookModel } from "../models/BookModel";
+import { fetchData } from "../layouts/Utils/fetchData";
 
 export const useBookFetch = (
   setBook: (book: BookModel) => void,
@@ -18,15 +19,7 @@ export const useBookFetch = (
           ? `${baseUrl}${searchUrl}`
           : `${baseUrl}/${bookId}`;
 
-          console.log("url: ", url);
-
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error("Something went wrong fetching the book!");
-        }
-
-        const responseJson = await response.json();
+        const responseJson = await fetchData(url, 'useBookFetch');
 
         const loadedBook: BookModel = {
           _id: responseJson.id,
@@ -51,5 +44,5 @@ export const useBookFetch = (
 
     fetchBook();
     window.scrollTo(0, 0);
-  }, [bookId, searchUrl]);
+  }, [bookId, searchUrl, setBook, setHttpError, setIsLoading]);
 };

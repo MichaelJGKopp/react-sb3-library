@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ReviewModel } from "../models/ReviewModel";
+import { fetchData } from "../layouts/Utils/fetchData";
 
 export const useReviewsFetch = (
   setReviews: (reviews: ReviewModel[]) => void,
@@ -21,37 +22,31 @@ export const useReviewsFetch = (
           ? baseUrl + searchUrl
           : baseUrl + "/search/findByBookId?bookId=" + bookId;
 
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error("Error fetching reviews");
-        }
-
-        const jsonResponse = await response.json();
-        const jsonResponseData = jsonResponse._embedded.reviews;
+        const responseJson = await fetchData(url, 'useBooksFetch');
+        const responseJsonData = responseJson._embedded.reviews;
 
         // initialize loadedReviews and ratingAverage before loop
         const loadedReviews: ReviewModel[] = [];
         let ratingAverage = 0;  // calculate average rating in loop
 
-        for (const key in jsonResponseData) {
+        for (const key in responseJsonData) {
           loadedReviews.push( //convert API data to ReviewModel
             new ReviewModel(
-              jsonResponseData[key].id,
-              jsonResponseData[key].userEmail,
-              jsonResponseData[key].date,
-              jsonResponseData[key].rating,
-              jsonResponseData[key].bookId,
-              jsonResponseData[key].reviewDescription
+              responseJsonData[key].id,
+              responseJsonData[key].userEmail,
+              responseJsonData[key].date,
+              responseJsonData[key].rating,
+              responseJsonData[key].bookId,
+              responseJsonData[key].reviewDescription
             )
           );
-          ratingAverage += jsonResponseData[key].rating;
+          ratingAverage += responseJsonData[key].rating;
         }
         setReviews(loadedReviews);
         setRatingAverage(ratingAverage / loadedReviews.length);
 
-        setTotalElements(jsonResponse.page.totalElements);
-        setTotalPages(jsonResponse.page.totalPages);
+        setTotalElements(responseJson.page.totalElements);
+        setTotalPages(responseJson.page.totalPages);
       } catch (error) {
         setHttpError(error instanceof Error ? error.message : "Unknown error");
       } finally {
@@ -60,7 +55,7 @@ export const useReviewsFetch = (
     };
 
     fetchReviews();
-  }, [bookId, searchUrl]); // Only re-run when bookId or searchUrl changes
+  }, [bookId, searchUrl, setHttpError, setIsLoading, setRatingAverage, setReviews]); // Include all dependencies
 
   return { totalElements, totalPages };
 };

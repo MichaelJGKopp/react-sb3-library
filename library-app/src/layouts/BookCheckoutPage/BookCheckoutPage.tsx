@@ -13,17 +13,20 @@ export const BookCheckoutPage = () => {
 
   const [book, setBook] = useState<BookModel>();
   const [isLoadingBook, setIsLoadingBook] = useState(true);
-  const [httpError, setHttpError] = useState<string | null>(null);
-  useBookFetch(setBook, setIsLoadingBook, setHttpError, bookId);
+  const [bookError, setBookError] = useState<string | null>(null);
+  useBookFetch(setBook, setIsLoadingBook, setBookError, bookId);
   
   const [reviews, setReviews] = useState<ReviewModel[]>([]);
   const [ratingAverage, setRatingAverage] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
-  useReviewsFetch(setReviews, setRatingAverage, setIsLoadingReview, setHttpError, bookId);
+  const [reviewError, setReviewError] = useState<string | null>(null);
+  useReviewsFetch(setReviews, setRatingAverage, setIsLoadingReview, setReviewError, bookId);
 
   if (isLoadingBook || isLoadingReview) {
     return <SpinnerLoading />;
   }
+
+  const httpError = bookError || reviewError;
 
   if (httpError) {
     return (

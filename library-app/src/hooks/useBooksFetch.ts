@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BookModel } from "../models/BookModel";
+import { fetchData } from "../layouts/Utils/fetchData";
 
 export const useBooksFetch = (
   itemsPerPage: number = 9,
@@ -21,13 +22,7 @@ export const useBooksFetch = (
           ? `${baseUrl}${searchUrl}&size=${itemsPerPage}&page=${currentPage}`
           : `${baseUrl}?size=${itemsPerPage}&page=${currentPage}`;
 
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error("Something went wrong fetching the books!");
-        }
-
-        const responseJson = await response.json();
+        const responseJson = await fetchData(url, 'useBooksFetch');
 
         // Set total elements if available in response
         if (responseJson.page) {
