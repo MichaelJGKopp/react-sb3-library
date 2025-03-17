@@ -1,13 +1,27 @@
+import { useState } from "react";
 import { useBookFetch } from "../../hooks/useBookFetch";
+import { BookModel } from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReview } from "./CheckoutAndReview";
+import { LatestReviews } from "./LatestReviews";
+import { ReviewModel } from "../../models/ReviewModel";
+import { useReviewsFetch } from "../../hooks/useReviewsFetch";
 
 export const BookCheckoutPage = () => {
   const bookId = window.location.pathname.split("/")[2];
-  const { book, isLoading, httpError } = useBookFetch(bookId);
 
-  if (isLoading) {
+  const [book, setBook] = useState<BookModel>();
+  const [isLoadingBook, setIsLoadingBook] = useState(true);
+  const [httpError, setHttpError] = useState<string | null>(null);
+  useBookFetch(setBook, setIsLoadingBook, setHttpError, bookId);
+  
+  const [reviews, setReviews] = useState<ReviewModel[]>([]);
+  const [ratingAverage, setRatingAverage] = useState(0);
+  const [isLoadingReview, setIsLoadingReview] = useState(true);
+  useReviewsFetch(setReviews, setRatingAverage, setIsLoadingReview, setHttpError, bookId);
+
+  if (isLoadingBook || isLoadingReview) {
     return <SpinnerLoading />;
   }
 
@@ -47,10 +61,11 @@ export const BookCheckoutPage = () => {
               <h2>{book?._title}</h2>
               <h5 className="text-primary">{book?._author}</h5>
               <p className="lead">{book?._description}</p>
-              <StarsReview rating={2.5} size={32} />
+              <StarsReview rating={ratingAverage} size={32} />
             </div>
           </div>
-            <CheckoutAndReview book={book} mobile={false} />
+          <CheckoutAndReview book={book} mobile={false} />
+          <LatestReviews reviews={reviews} bookId={bookId} mobile={false} />
         </div>
         <hr />
       </div>
@@ -80,10 +95,11 @@ export const BookCheckoutPage = () => {
             <h2>{book?._title}</h2>
             <h5 className="text-primary">{book?._author}</h5>
             <p className="lead">{book?._description}</p>
-            <StarsReview rating={2.5} size={32} />
+            <StarsReview rating={ratingAverage} size={32} />
           </div>
         </div>
         <CheckoutAndReview book={book} mobile={true} />
+        <LatestReviews reviews={reviews} bookId={bookId} mobile={true} />
         <hr />
       </div>
     </div>

@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { BookModel } from "../models/BookModel";
 
-export const useBookFetch = (bookId: string = "1", searchUrl?: string) => {
-  const [book, setBook] = useState<BookModel>();
-  const [isLoading, setIsLoading] = useState(true);
-  const [httpError, setHttpError] = useState<string | null>(null);
+export const useBookFetch = (
+  setBook: (book: BookModel) => void,
+  setIsLoading: (isLoading: boolean) => void,
+  setHttpError: (httpError: string | null) => void,
+  bookId: string = "1",
+  searchUrl?: string) => {
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -50,6 +52,4 @@ export const useBookFetch = (bookId: string = "1", searchUrl?: string) => {
     fetchBook();
     window.scrollTo(0, 0);
   }, [bookId, searchUrl]);
-
-  return { book, isLoading, httpError };
 };
