@@ -1,4 +1,4 @@
-const DEBUG = true; // Set to false in production
+export const DEBUG = true; // Set to false in production
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchData(url: string, caller?: string): Promise<any> {

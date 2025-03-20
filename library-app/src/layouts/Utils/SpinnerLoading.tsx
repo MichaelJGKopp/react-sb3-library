@@ -1,7 +1,7 @@
-export const SpinnerLoading = () => {
+export const SpinnerLoading = ({height = "550px"}:{height?: string}) => {
     return (
         <div className="container m-5 d-flex justify-content-center" 
-        style={{height:550}}>
+        style={{height: `${height}`}} >
             <div className="spinner-border text-primary" role="status">
                 <span className="visually-hidden">
                     Loading...
