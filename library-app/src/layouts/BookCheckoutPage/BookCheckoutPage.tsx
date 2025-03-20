@@ -7,9 +7,11 @@ import { CheckoutAndReview } from "./CheckoutAndReview";
 import { LatestReviews } from "./LatestReviews";
 import { ReviewModel } from "../../models/ReviewModel";
 import { useReviewsFetch } from "../../hooks/useReviewsFetch";
+import { useParams } from "react-router-dom";
 
 export const BookCheckoutPage = () => {
-  const bookId = window.location.pathname.split("/")[2];
+  // const bookId = window.location.pathname.split("/")[2];
+  const { bookId } = useParams<{ bookId: string }>();
 
   const [book, setBook] = useState<BookModel>();
   const [isLoadingBook, setIsLoadingBook] = useState(true);
