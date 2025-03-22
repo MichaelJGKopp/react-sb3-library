@@ -2,6 +2,7 @@ package io.michaeljgkopp.github.springbootlibrary.config;
 
 import io.michaeljgkopp.github.springbootlibrary.entity.Book;
 import io.michaeljgkopp.github.springbootlibrary.entity.Review;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -13,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     // React frontend running on port 5173 (vite default) is allowed to access the API on all endpoints
-    private String[] allowedOrigins = {"http://localhost:5173", "http://127.0.0.1:5173"};
+    @Value("${api.allowed-origins}")
+    private String[] allowedOrigins;
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config,

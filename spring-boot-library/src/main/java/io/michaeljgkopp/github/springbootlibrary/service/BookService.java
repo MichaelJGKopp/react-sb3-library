@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CheckoutService {
+public class BookService {
     private final BookRepository bookRepository;
     private final CheckoutRepository checkoutRepository;
 
