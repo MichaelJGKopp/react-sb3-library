@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * It provides endpoints for checking out books and checking if a book is checked out by a user.
  */
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("${spring.data.rest.base-path}/books")
 @CrossOrigin(origins = "${api.allowed-origins}")
 @RequiredArgsConstructor
 public class BookController {
