@@ -18,11 +18,11 @@ export const CheckoutAndReview: React.FC<{
         );
       } else if (isLoaned) {
         return (
-          <p className="text-success border border-success rounded px-2 py-1 fw-bold d-inline-block">Book checked out. Enjoy!</p>
+          <p className="alert alert-success d-inline p-2">Book checked out. Enjoy!</p>
         );
       } else if (loansCount >= 5) {
         return (
-          <p className="text-danger border border-danger rounded px-2 py-1 fw-bold d-inline-block">Too many books checked out.</p>
+          <p className="alert alert-danger d-inline p-2">Too many books checked out.</p>
         );
       }
     }
