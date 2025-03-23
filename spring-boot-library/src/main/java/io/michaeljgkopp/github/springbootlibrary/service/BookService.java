@@ -66,4 +66,14 @@ public class BookService {
         Checkout checkout = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
         return checkout != null;
     }
+
+    /**
+     * Returns the number of books checked out by a user.
+     *
+     * @param userEmail the email of the user
+     * @return the number of books checked out by the user
+     */
+    public Integer countCheckedOutBooksByUserEmail(String userEmail) {
+        return checkoutRepository.findByUserEmail(userEmail).size();
+    }
 }

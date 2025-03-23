@@ -34,6 +34,17 @@ public class BookController {
     }
 
     /**
+     * Counts the number of books checked out by a specific user.
+     *
+     * @param userEmail the email of the user
+     * @return the count of checked-out books
+     */
+    @GetMapping("/secure/count/byuser")
+    Integer countCheckedOutBooksByUserEmail(@RequestParam String userEmail) {
+        return bookService.countCheckedOutBooksByUserEmail(userEmail);
+    }
+
+    /**
      * Checks out a book for a specific user.
      *
      * @param userEmail the email of the user
