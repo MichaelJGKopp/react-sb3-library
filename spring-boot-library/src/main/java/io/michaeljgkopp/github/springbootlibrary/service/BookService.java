@@ -54,4 +54,16 @@ public class BookService {
 
         return book;
     }
+
+    /**
+     * Returns if the user has already checked out the book.
+     *
+     * @param userEmail the email of the user who potentially already checked out the book
+     * @param bookId    the ID of the potentially checked out book
+     * @return Boolean indicating whether the book is already checked out by the user or not
+     */
+    public Boolean isBookCheckedout(String userEmail, Long bookId) {
+        Checkout checkout = checkoutRepository.findByUserEmailAndBookId(userEmail, bookId);
+        return checkout != null;
+    }
 }
