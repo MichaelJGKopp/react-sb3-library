@@ -49,7 +49,7 @@ export const CheckoutAndReview: React.FC<{
           )}
           <div className="row">
             <p className="col lead">
-              <b>{book?._copies} / {book?._copiesAvailable} </b>
+              <b>{book?._copiesAvailable} / {book?._copies} </b>
               copies available
             </p>
           </div>
