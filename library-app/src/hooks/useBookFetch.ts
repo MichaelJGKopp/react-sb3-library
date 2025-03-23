@@ -8,7 +8,9 @@ export const useBookFetch = (
   setIsLoading: (isLoading: boolean) => void,
   setHttpError: (httpError: string | null) => void,
   bookId: string = "1",
-  searchUrl?: string) => {
+  searchUrl?: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dependencies: any[] = []) => {
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -45,5 +47,6 @@ export const useBookFetch = (
 
     fetchBook();
     window.scrollTo(0, 0);
-  }, [bookId, searchUrl, setBook, setHttpError, setIsLoading]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookId, searchUrl, setBook, setHttpError, setIsLoading, ...dependencies]); // Include all dependencies
 };
