@@ -24,12 +24,11 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())   // disable CSRF for REST API
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(basePath + "/books/secure/**")
-                        .authenticated())
+                        .requestMatchers(basePath + "/*/secure/**")
+                        .authenticated()
+                        // Allow all other endpoints without authentication
+                        .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));    // Use JWT for authentication
-
-        // disable cors
-        // http.cors(cors -> cors.disable());
 
         // Overwrite cors
         http.cors(withDefaults());
