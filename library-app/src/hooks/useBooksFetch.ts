@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { BookModel } from "../models/BookModel";
 import { fetchData } from "../layouts/Utils/fetchData";
+import { ENDPOINTS } from "../lib/apiConfig";
 
 export const useBooksFetch = (
   itemsPerPage: number = 9,
@@ -15,7 +16,7 @@ export const useBooksFetch = (
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const baseUrl: string = "http://localhost:8080/api/books";
+        const baseUrl: string = ENDPOINTS.BOOKS;
 
         // Use searchUrl if provided, otherwise create standard URL
         const url: string = searchUrl

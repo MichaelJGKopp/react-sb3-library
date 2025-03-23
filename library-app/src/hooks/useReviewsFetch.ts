@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ReviewModel } from "../models/ReviewModel";
 import { fetchData } from "../layouts/Utils/fetchData";
+import { ENDPOINTS } from "../lib/apiConfig";
 
 export const useReviewsFetch = (
   setReviews: (reviews: ReviewModel[]) => void,
@@ -17,7 +18,7 @@ export const useReviewsFetch = (
     const fetchReviews = async () => {
       try {
         setIsLoading(true);
-        const baseUrl: string = "http://localhost:8080/api/reviews";
+        const baseUrl: string = ENDPOINTS.REVIEWS;
         const url: string = searchUrl
           ? baseUrl + searchUrl
           : baseUrl + "/search/findByBookId?bookId=" + bookId;
