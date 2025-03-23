@@ -3,6 +3,7 @@ import { BookModel } from "../../models/BookModel";
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
 import { DEBUG } from "../Utils/fetchData";
+import { API_CONFIG, ENDPOINTS } from "../../lib/apiConfig";
 
 export const CheckoutAndReview: React.FC<{
   book: BookModel | undefined;
@@ -32,7 +33,7 @@ export const CheckoutAndReview: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:8080/api/books/secure/checkout?userEmail=${userEmail}&bookId=${bookId}`,
+        `${ENDPOINTS.BOOKS}/secure/checkout?userEmail=${userEmail}&bookId=${bookId}`,
         {
           method: 'PUT',
           headers: {
@@ -91,7 +92,7 @@ export const CheckoutAndReview: React.FC<{
             <p className="text-success">Book checked out successfully!</p>
           ) : (
             <form onSubmit={handleCheckout}>
-              {checkoutError && <p className="text-danger">{checkoutError}</p>}
+              {checkoutError && <p className="text-danger">{checkoutError}</p> && console.log(checkoutError)}
               <button 
                 type="submit" 
                 className="btn btn-success btn-lg" 
