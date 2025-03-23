@@ -24,13 +24,13 @@ public class BookController {
     private final BookService bookService;
 
     /**
-     * Checks if a book is checked out by a specific user.
+     * Checks if a book is checked out by the current user.
      *
      * @param bookId the ID of the book to check
      * @param jwt  the JWT token containing user information
      * @return true if the book is checked out by the user, false otherwise
      */
-    @GetMapping("/secure/ischeckedout/byuser")
+    @GetMapping("/secure/ischeckedout")
     public Boolean isBookCheckedout(@RequestParam Long bookId,
                                     @AuthenticationPrincipal Jwt jwt) {
         String userEmail = jwt.getClaimAsString("sub");
@@ -38,12 +38,12 @@ public class BookController {
     }
 
     /**
-     * Counts the number of books checked out by a specific user.
+     * Counts the number of books checked out by the current user.
      *
      * @param jwt the JWT token containing user information
      * @return the count of checked-out books
      */
-    @GetMapping("/secure/checkoutcount/byuser")
+    @GetMapping("/secure/loans/count")
     Integer countCheckedOutBooksByUserEmail(@AuthenticationPrincipal Jwt jwt) {
         String userEmail = jwt.getClaimAsString("sub");
         return bookService.countCheckedOutBooksByUserEmail(userEmail);

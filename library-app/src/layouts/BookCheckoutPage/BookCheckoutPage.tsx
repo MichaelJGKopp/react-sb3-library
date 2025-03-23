@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBookFetch } from "../../hooks/useBookFetch";
 import { BookModel } from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
@@ -8,27 +8,89 @@ import { LatestReviews } from "./LatestReviews";
 import { ReviewModel } from "../../models/ReviewModel";
 import { useReviewsFetch } from "../../hooks/useReviewsFetch";
 import { useParams } from "react-router-dom";
+import { useOktaAuth } from "@okta/okta-react";
+import { ENDPOINTS } from "../../lib/apiConfig";
 
 export const BookCheckoutPage = () => {
-  // const bookId = window.location.pathname.split("/")[2];
-  const { bookId } = useParams<{ bookId: string }>();
+  // authentication state
+  const { authState } = useOktaAuth();
 
+  // get bookId from URL
+  const { bookId } = useParams<{ bookId: string }>();
+  if (!bookId) {
+    throw new Error("Book ID is required");
+  }
+
+  // book data, fetch from API
   const [book, setBook] = useState<BookModel>();
   const [isLoadingBook, setIsLoadingBook] = useState(true);
   const [bookError, setBookError] = useState<string | null>(null);
   useBookFetch(setBook, setIsLoadingBook, setBookError, bookId);
-  
+
+  // review data, fetch from API
   const [reviews, setReviews] = useState<ReviewModel[]>([]);
   const [ratingAverage, setRatingAverage] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
   const [reviewError, setReviewError] = useState<string | null>(null);
-  useReviewsFetch(setReviews, setRatingAverage, setIsLoadingReview, setReviewError, bookId);
+  useReviewsFetch(
+    setReviews,
+    setRatingAverage,
+    setIsLoadingReview,
+    setReviewError,
+    bookId
+  );
 
-  if (isLoadingBook || isLoadingReview) {
+  // loans count, user can only checkout if they have less than 5 loans
+  const [loansCount, setLoansCount] = useState(0);
+  const [isLoadingLoansCount, setIsLoadingLoansCount] = useState(true);
+  const [loansCountError, setLoansCountError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserCurrentLoansCount = async () => {
+      if (!authState?.isAuthenticated) {
+        setLoansCount(0);
+        setIsLoadingLoansCount(false);
+        return;
+      }
+
+      const url = `${ENDPOINTS.BOOKS}/secure/loans/count`;
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+          "Content-Type": "application/json"
+        },
+      };
+
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch loans count");
+      }
+
+      const responseJson = await response.json(); // has only the count
+      setLoansCount(responseJson);
+      setIsLoadingLoansCount(false);
+    };
+
+    fetchUserCurrentLoansCount().catch((error: Error) => {
+      setIsLoadingLoansCount(false);
+      setLoansCountError(error.message);
+    });
+  }, [
+    authState,
+    loansCount,
+    setLoansCount,
+    setIsLoadingLoansCount,
+    setLoansCountError,
+  ]);
+
+  // loading placeholder
+  if (isLoadingBook || isLoadingReview || isLoadingLoansCount) {
     return <SpinnerLoading />;
   }
 
-  const httpError = bookError || reviewError;
+  const httpError = bookError || reviewError || loansCountError;
 
   if (httpError) {
     return (
@@ -69,7 +131,7 @@ export const BookCheckoutPage = () => {
               <StarsReview rating={ratingAverage} size={32} />
             </div>
           </div>
-          <CheckoutAndReview book={book} mobile={false} />
+          <CheckoutAndReview book={book} mobile={false} loansCount={loansCount} />
           <LatestReviews reviews={reviews} bookId={bookId} mobile={false} />
         </div>
         <hr />
@@ -103,7 +165,7 @@ export const BookCheckoutPage = () => {
             <StarsReview rating={ratingAverage} size={32} />
           </div>
         </div>
-        <CheckoutAndReview book={book} mobile={true} />
+        <CheckoutAndReview book={book} mobile={true} loansCount={loansCount} />
         <LatestReviews reviews={reviews} bookId={bookId} mobile={true} />
         <hr />
       </div>

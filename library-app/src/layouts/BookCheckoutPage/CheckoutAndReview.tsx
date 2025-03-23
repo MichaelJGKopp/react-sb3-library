@@ -3,16 +3,17 @@ import { BookModel } from "../../models/BookModel";
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
 import { DEBUG } from "../Utils/fetchData";
-import { API_CONFIG, ENDPOINTS } from "../../lib/apiConfig";
+import { ENDPOINTS } from "../../lib/apiConfig";
 
 export const CheckoutAndReview: React.FC<{
   book: BookModel | undefined;
   mobile: boolean;
-}> = ({ book, mobile }) => {
+  loansCount: number;
+}> = ({ book, mobile, loansCount }) => {
   const { authState } = useOktaAuth();
   const [isCheckedOut, setIsCheckedOut] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutError, setCheckoutError] = useState(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const userEmail = authState?.accessToken?.claims.sub;
   const bookId = book?._id;
@@ -48,8 +49,8 @@ export const CheckoutAndReview: React.FC<{
         const error = await response.text();
         setCheckoutError(error);
       }
-    } catch (error: any) {
-      setCheckoutError(error.message);
+    } catch (error: unknown) {
+      setCheckoutError(error instanceof Error ? error.message : String(error));
     } finally {
       setIsCheckingOut(false);
     }
@@ -62,16 +63,11 @@ export const CheckoutAndReview: React.FC<{
       <div className="card-body container">
         <div className="mt-3">
           <p>
-            <b>
-              {(book?._copies ?? 0) -
-                (book?._copiesAvailable ?? 0) +
-                "/" +
-                "5 "}
-            </b>
+            <b>{loansCount}/5 </b>
             books checked out
           </p>
           <hr />
-          {book && book._copiesAvailable && book._copiesAvailable > 0 ? (
+          {book && book._copiesAvailable && (book._copiesAvailable > 0) ? (
             <h4 className="text-success">Available</h4>
           ) : (
             <h4 className="text-danger">Wait List</h4>
@@ -92,7 +88,12 @@ export const CheckoutAndReview: React.FC<{
             <p className="text-success">Book checked out successfully!</p>
           ) : (
             <form onSubmit={handleCheckout}>
-              {checkoutError && <p className="text-danger">{checkoutError}</p> && console.log(checkoutError)}
+              {checkoutError && (
+                <>
+                  <p className="text-danger">{checkoutError}</p>
+                  {console.log(checkoutError)}
+                </>
+              )}
               <button 
                 type="submit" 
                 className="btn btn-success btn-lg" 
